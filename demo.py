@@ -7,10 +7,7 @@ import time
 import cv2
 
 # object detection demo
-<<<<<<< HEAD
 from utils.utils import calculate_midpoint
-=======
->>>>>>> 8ec8e5394e2f00a7533f8c68cde1c32e301bd8ca
 
 ap = argparse.ArgumentParser()
 ap.add_argument(
@@ -95,15 +92,19 @@ while True:
             (startX, startY, endX, endY) = box.astype("int")
 
             output = calculate_midpoint(startX, startY, endX, endY)
-            print(
-                f"x: {output[0]}, y:{output[0]}"
-            )
+            print(f"x: {output[0]}, y:{output[0]}")
 
             # draw the prediction on the frame
             label = "{}: {:.2f}%".format(CLASSES[idx], confidence * 100)
             y = startY - 15 if startY - 15 > 15 else startY + 15
             cv2.putText(
-                frame, label, (startX, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, colours[idx], 2
+                frame,
+                label,
+                (startX, y),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.5,
+                colours[idx],
+                2,
             )
 
     cv2.imshow("Frame", frame)

@@ -4,13 +4,10 @@ from threading import Thread
 import cv2
 
 
-<<<<<<< HEAD
 def calculate_midpoint(start_x, start_y, end_x, end_y) -> tuple:
     return int((start_x + end_x) / 2), int((start_y + end_y) / 2)
 
 
-=======
->>>>>>> 8ec8e5394e2f00a7533f8c68cde1c32e301bd8ca
 class FPS:
     def __init__(self):
         # store the start time, end time, and total number of frames
