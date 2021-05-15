@@ -7,7 +7,10 @@ import time
 import cv2
 
 # object detection demo
+<<<<<<< HEAD
 from utils.utils import calculate_midpoint
+=======
+>>>>>>> 8ec8e5394e2f00a7533f8c68cde1c32e301bd8ca
 
 ap = argparse.ArgumentParser()
 ap.add_argument(
