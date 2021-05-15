@@ -94,7 +94,8 @@ while True:
             output = calculate_midpoint(startX, startY, endX, endY)
             print(f"x: {output[0]}, y:{output[0]}")
 
-            # draw the prediction on the frame
+            # cv2.rectangle(frame, (startX, startY), (endX, endY), COLORS[idx], 2)
+            cv2.circle(frame, calculate_midpoint(startX, startY, endX, endY), radius=0, color=(0, 0, 255), thickness=4)
             label = "{}: {:.2f}%".format(CLASSES[idx], confidence * 100)
             y = startY - 15 if startY - 15 > 15 else startY + 15
             cv2.putText(
