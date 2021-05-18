@@ -9,6 +9,11 @@ poetry install
 
 ## Running
 
+### Camera Test
+```
+poetry run python camera_test.py -p=1
+```
+
 ### Object detection
 ```
 poetry run python object_detection.py  \

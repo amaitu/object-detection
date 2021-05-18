@@ -3,6 +3,7 @@ import time
 
 import cv2
 import numpy
+import pkg_resources
 
 from utils.utils import VideoStream, FPS, calculate_midpoint, OutputLogger
 
@@ -57,6 +58,17 @@ if __name__ == "__main__":
     while True:
         imageFrame = video_stream.read()
         hsv_frame = convert_frame_to_colour_model(imageFrame)
+
+        cv2.putText(
+            imageFrame,
+            f"MakeSense {pkg_resources.get_distribution('object-detection').version}",
+            (10, hsv_frame.shape[0] - 10),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.35,
+            (0, 0, 255),
+            1,
+        )
+
         mask = create_mask(hsv_frame)
 
         # Morphological Transform, Dilation
@@ -100,6 +112,7 @@ if __name__ == "__main__":
             )
 
         cv2.imshow("colours", imageFrame)
+
         if cv2.waitKey(10) & 0xFF == ord("q"):
             cv2.destroyAllWindows()
             break
