@@ -2,7 +2,7 @@ import argparse
 import time
 
 import cv2
-import numpy as np
+import numpy
 
 from utils.utils import VideoStream, FPS, calculate_midpoint, OutputLogger
 
@@ -47,7 +47,6 @@ if __name__ == "__main__":
         raise RuntimeError("Invalid colour.")
 
     print(f"[INFO] seeking: {args['colour']}")
-    print("[INFO] starting video stream...")
 
     video_stream = VideoStream(src=0, framerate=args["framerate"]).start()
     time.sleep(2.0)
@@ -64,7 +63,7 @@ if __name__ == "__main__":
         # for each color and bitwise_and operator
         # between imageFrame and mask determines
         # to detect only that particular color
-        kernel = np.ones((5, 5), "uint8")
+        kernel = numpy.ones((5, 5), "uint8")
 
         mask = cv2.dilate(mask, kernel)
         cv2.bitwise_and(imageFrame, imageFrame, mask=mask)
@@ -82,14 +81,14 @@ if __name__ == "__main__":
             x, y, w, h = cv2.boundingRect(contour)
             output = output_logger.set_output(calculate_midpoint(x, y, x + w, y + h))
 
-            coordinates_to_draw = calculate_midpoint(x, y, x + w, y + h) if output else output_logger.current_output
+            coordinates_to_draw = (
+                calculate_midpoint(x, y, x + w, y + h)
+                if output
+                else output_logger.current_output
+            )
 
             cv2.circle(
-                imageFrame,
-                coordinates_to_draw,
-                radius=0,
-                color=(0, 0, 0),
-                thickness=4,
+                imageFrame, coordinates_to_draw, radius=0, color=(0, 0, 0), thickness=4,
             )
             cv2.putText(
                 imageFrame,
