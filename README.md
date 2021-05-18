@@ -1,7 +1,11 @@
 # object-detection
 
-poetry install
+## Installation
+Install poetry - https://python-poetry.org/docs/
 
+```
+poetry install
+```
 
 ```
 poetry run python demo.py  \
@@ -9,3 +13,11 @@ poetry run python demo.py  \
         --model MobileNetSSD_deploy.caffemodel \
       --confidence .5
 ```
+
+
+
+## Definitions
+
+# color space
+Method for grouping colours - often implies the use of a colour model, e.g. RGB.
+

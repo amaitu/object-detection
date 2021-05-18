@@ -8,6 +8,22 @@ def calculate_midpoint(start_x, start_y, end_x, end_y) -> tuple:
     return int((start_x + end_x) / 2), int((start_y + end_y) / 2)
 
 
+class OutputLogger:
+    def __init__(self):
+        self.current_output = (1, 1)
+        self.output_difference_threshold = 30
+
+    def set_output(self, output):
+        output_difference = abs(sum(output) - sum(self.current_output))
+
+        if output_difference > self.output_difference_threshold:
+            print(f"output threshold exceeded, saving new {self.current_output} -> {output}")
+            self.current_output = output
+            return True
+        else:
+            return False
+
+
 class FPS:
     def __init__(self):
         # store the start time, end time, and total number of frames
@@ -75,6 +91,7 @@ class WebcamVideoStream:
 
 class VideoStream:
     def __init__(self, src=0, usePiCamera=False, resolution=(320, 240), framerate=32):
+        print(f"[INFO] Framerate: {framerate}")
         # check to see if the picamera module should be used
         if usePiCamera:
             # only import the picamera packages unless we are
