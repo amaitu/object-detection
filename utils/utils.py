@@ -1,7 +1,6 @@
 import datetime
 from threading import Thread
 import cv2
-from .pi_video_stream import PiVideoStream
 
 
 def calculate_midpoint(start_x, start_y, end_x, end_y) -> tuple:
