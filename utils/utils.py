@@ -7,6 +7,10 @@ def calculate_midpoint(start_x, start_y, end_x, end_y) -> tuple:
     return int((start_x + end_x) / 2), int((start_y + end_y) / 2)
 
 
+def get_frame_height_width(frame) -> tuple:
+    return frame.shape[:2]
+
+
 class OutputLogger:
     def __init__(self):
         self.current_output = (1, 1)
@@ -92,7 +96,6 @@ class WebcamVideoStream:
 
 class VideoStream:
     def __init__(self, src=0, usePiCamera=False, resolution=(320, 240), framerate=32):
-        print(f"[INFO] Framerate: {framerate}")
         # check to see if the picamera module should be used
         if usePiCamera:
             # only import the picamera packages unless we are

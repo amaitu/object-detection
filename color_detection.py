@@ -35,11 +35,17 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
 
     ap.add_argument(
-        "-p", "--colour", required=True, help="colour, one of: red,blue,green,yellow",
+        "-p",
+        "--colour",
+        required=True,
+        help="colour, one of: red,blue,green,yellow",
     )
 
     ap.add_argument(
-        "-fr", "--framerate", default=32, help="FPS, integer",
+        "-fr",
+        "--framerate",
+        default=32,
+        help="FPS, integer",
     )
 
     args = vars(ap.parse_args())
@@ -100,7 +106,11 @@ if __name__ == "__main__":
             )
 
             cv2.circle(
-                imageFrame, coordinates_to_draw, radius=0, color=(0, 0, 0), thickness=4,
+                imageFrame,
+                coordinates_to_draw,
+                radius=0,
+                color=(0, 0, 0),
+                thickness=4,
             )
             cv2.putText(
                 imageFrame,

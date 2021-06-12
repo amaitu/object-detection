@@ -1,14 +1,13 @@
-from imutils.video import VideoStream
-from imutils.video import FPS
-import numpy as np
 import argparse
-import imutils
 import time
+from typing import List, Any, Union
+import imutils
 import cv2
+import numpy as np
 
 # object detection demo
-from utils.utils import calculate_midpoint
-
+from utils.drawing import draw_crosshair, draw_dot, draw_annotations
+from utils.utils import calculate_midpoint, VideoStream, FPS, get_frame_height_width
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
@@ -25,10 +24,11 @@ if __name__ == "__main__":
         default=0.2,
         help="minimum probability to filter weak detections",
     )
-    args = vars(ap.parse_args())
 
-    # todo limit classes without index error
-    CLASSES = [
+    arguments = vars(ap.parse_args())
+
+    # do not change order
+    AVAILABLE_CLASSES: List[Union[str, Any]] = [
         "background",
         "aeroplane",
         "bicycle",
@@ -52,11 +52,15 @@ if __name__ == "__main__":
         "tvmonitor",
     ]
 
-    colours = np.random.uniform(0, 255, size=(len(CLASSES), 3))
+    DISPLAY_CLASSES: List[Union[str, Any]] = [
+        "person",
+    ]
+
+    colours = np.random.uniform(0, 255, size=(len(AVAILABLE_CLASSES), 3))
 
     # load our serialized model from disk
     print("[INFO] loading model...")
-    net = cv2.dnn.readNetFromCaffe(args["prototxt"], args["model"])
+    net = cv2.dnn.readNetFromCaffe(arguments["prototxt"], arguments["model"])
     # initialize the video stream, allow the cammera sensor to warmup,
     # and initialize the FPS counter
     print("[INFO] starting video stream...")
@@ -66,12 +70,11 @@ if __name__ == "__main__":
 
     # loop over the frames from the video stream
     while True:
-        # grab the frame from the threaded video stream and resize it
-        # to have a maximum width of 400 pixels
         frame = vs.read()
-        frame = imutils.resize(frame, width=400)
+        frame = imutils.resize(frame, width=1600)
         # grab the frame dimensions and convert it to a blob
-        (h, w) = frame.shape[:2]
+        (height, width) = get_frame_height_width(frame)
+
         blob = cv2.dnn.blobFromImage(
             cv2.resize(frame, (300, 300)), 0.007843, (300, 300), 127.5
         )
@@ -86,35 +89,35 @@ if __name__ == "__main__":
             # the prediction
             confidence = detections[0, 0, i, 2]
             # filter out weak detections:
-            if confidence > args["confidence"]:
+            if confidence > arguments["confidence"]:
                 # extract the index of the class label from the
                 # `detections`, then compute the (x, y)-coordinates of
                 # the bounding box for the object
                 idx = int(detections[0, 0, i, 1])
-                box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+
+                if AVAILABLE_CLASSES[idx] not in DISPLAY_CLASSES:
+                    continue
+
+                box = detections[0, 0, i, 3:7] * np.array(
+                    [width, height, width, height]
+                )
                 (startX, startY, endX, endY) = box.astype("int")
 
-                output = calculate_midpoint(startX, startY, endX, endY)
-                print(f"x: {output[0]}, y:{output[0]}")
+                midpoint = calculate_midpoint(startX, startY, endX, endY)
+                print(f"x: {midpoint[0]}, y:{midpoint[0]}")
 
-                # cv2.rectangle(frame, (startX, startY), (endX, endY), COLORS[idx], 2)
-                cv2.circle(
-                    frame,
-                    calculate_midpoint(startX, startY, endX, endY),
-                    radius=0,
-                    color=(0, 0, 255),
-                    thickness=4,
-                )
-                label = "{}: {:.2f}%".format(CLASSES[idx], confidence * 100)
-                y = startY - 15 if startY - 15 > 15 else startY + 15
-                cv2.putText(
-                    frame,
-                    label,
-                    (startX, y),
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    0.5,
-                    colours[idx],
-                    2,
+                draw_crosshair(frame, midpoint)
+
+                draw_dot(frame, midpoint)
+
+                draw_annotations(
+                    frame=frame,
+                    copy=[
+                        f"Detected: {AVAILABLE_CLASSES[idx]}",
+                        f"Confidence: {round(confidence * 100, 2)} %",
+                        f"Coords: x:{str(midpoint[0])}, y:{str(midpoint[1])}",
+                        f"Average FPS: 24.2",
+                    ]
                 )
 
         cv2.imshow("Frame", frame)
